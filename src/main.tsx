@@ -10,9 +10,8 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { handleServerError } from '@/lib/handle-server-error'
-import { DirectionProvider } from './context/direction-provider'
-import { FontProvider } from './context/font-provider'
 import { ThemeProvider } from './context/theme-provider'
+
 // Generated Routes
 import { routeTree } from './routeTree.gen'
 // Styles
@@ -22,7 +21,6 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: (failureCount, error) => {
-        // eslint-disable-next-line no-console
         if (import.meta.env.DEV) console.log({ failureCount, error })
 
         if (failureCount >= 0 && import.meta.env.DEV) return false
@@ -52,20 +50,20 @@ const queryClient = new QueryClient({
     onError: (error) => {
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
-          toast.error('Session expired!')
-          useAuthStore.getState().auth.reset()
+          useAuthStore.getState().clearAuth()
           const redirect = `${router.history.location.href}`
-          router.navigate({ to: '/sign-in', search: { redirect } })
+          toast.error('Session expired!')
+          router.navigate({ to: '/signIn', search: { redirect } })
         }
         if (error.response?.status === 500) {
           toast.error('Internal Server Error!')
           // Only navigate to error page in production to avoid disrupting HMR in development
           if (import.meta.env.PROD) {
-            router.navigate({ to: '/500' })
+            router.navigate({ to: '/500' as string })
           }
         }
         if (error.response?.status === 403) {
-          // router.navigate("/forbidden", { replace: true });
+          router.navigate({ to: '/forbidden' as string, replace: true })
         }
       }
     },
@@ -87,7 +85,7 @@ declare module '@tanstack/react-router' {
   }
 }
 
-// Render the app
+
 const rootElement = document.getElementById('root')!
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
@@ -95,11 +93,7 @@ if (!rootElement.innerHTML) {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <FontProvider>
-            <DirectionProvider>
-              <RouterProvider router={router} />
-            </DirectionProvider>
-          </FontProvider>
+          <RouterProvider router={router} />
         </ThemeProvider>
       </QueryClientProvider>
     </StrictMode>

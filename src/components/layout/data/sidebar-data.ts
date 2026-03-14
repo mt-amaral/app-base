@@ -11,12 +11,7 @@ import {
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
-export const sidebarData: SidebarData = {
-  user: {
-    name: 'satnaing',
-    email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
+export const sidebarData: Omit<SidebarData, 'user'> = {
   teams: [
     {
       name: 'Shadcn Admin',
@@ -61,17 +56,7 @@ export const sidebarData: SidebarData = {
               title: 'Appearance',
               url: '/settings/appearance',
               icon: Palette,
-            },
-            {
-              title: 'Notifications',
-              url: '/settings/notifications',
-              icon: Bell,
-            },
-            {
-              title: 'Display',
-              url: '/settings/display',
-              icon: Monitor,
-            },
+            }
           ],
         },
       ],

@@ -1,53 +1,121 @@
 import { create } from 'zustand'
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
-
-const ACCESS_TOKEN = 'thisisjustarandomstring'
+import { authService } from '@/services/auth-service'
 
 interface AuthUser {
-  accountNo: string
+  name: string
   email: string
-  role: string[]
-  exp: number
+  roles?: string[]
+}
+
+interface LoginPayload {
+  email: string
+  password: string
+  rememberMe: boolean
 }
 
 interface AuthState {
-  auth: {
-    user: AuthUser | null
-    setUser: (user: AuthUser | null) => void
-    accessToken: string
-    setAccessToken: (accessToken: string) => void
-    resetAccessToken: () => void
-    reset: () => void
-  }
+  user: AuthUser | null
+  isAuthenticated: boolean
+  isChecking: boolean
+  isInitialized: boolean
+  login: (payload: LoginPayload) => Promise<boolean>
+  checkMe: () => Promise<boolean>
+  initAuth: () => Promise<void>
+  logout: () => Promise<void>
+  clearAuth: () => void
 }
 
-export const useAuthStore = create<AuthState>()((set) => {
-  const cookieState = getCookie(ACCESS_TOKEN)
-  const initToken = cookieState ? JSON.parse(cookieState) : ''
-  return {
-    auth: {
+export const useAuthStore = create<AuthState>((set, get) => ({
+  user: null,
+  isAuthenticated: false,
+  isChecking: false,
+  isInitialized: false,
+
+  login: async (payload) => {
+    try {
+      const result = await authService.login(payload)
+
+      set({
+        user: result.data ?? null,
+        isAuthenticated: true,
+        isChecking: false,
+      })
+
+      return true
+    } catch {
+      set({
+        user: null,
+        isAuthenticated: false,
+        isChecking: false,
+      })
+      return false
+    }
+  },
+
+  checkMe: async () => {
+    set({ isChecking: true })
+
+    try {
+      const result = await authService.checkMe()
+
+      set({
+        user: result.data ?? null,
+        isAuthenticated: true,
+        isChecking: false,
+      })
+
+      return true
+    } catch {
+      set({
+        user: null,
+        isAuthenticated: false,
+        isChecking: false,
+      })
+
+      return false
+    }
+  },
+
+  initAuth: async () => {
+    if (get().isInitialized) return
+
+    set({ isChecking: true })
+    try {
+      const result = await authService.checkMe()
+      set({
+        user: result.data ?? null,
+        isAuthenticated: true,
+        isInitialized: true,
+      })
+    } catch {
+      set({
+        user: null,
+        isAuthenticated: false,
+        isInitialized: true,
+      })
+    } finally {
+      set({ isChecking: false })
+    }
+  },
+
+  logout: async () => {
+    try {
+      await authService.logout()
+    } finally {
+      set({
+        user: null,
+        isAuthenticated: false,
+        isChecking: false,
+        isInitialized: false,
+      })
+    }
+  },
+
+  clearAuth: () =>
+    set({
       user: null,
-      setUser: (user) =>
-        set((state) => ({ ...state, auth: { ...state.auth, user } })),
-      accessToken: initToken,
-      setAccessToken: (accessToken) =>
-        set((state) => {
-          setCookie(ACCESS_TOKEN, JSON.stringify(accessToken))
-          return { ...state, auth: { ...state.auth, accessToken } }
-        }),
-      resetAccessToken: () =>
-        set((state) => {
-          removeCookie(ACCESS_TOKEN)
-          return { ...state, auth: { ...state.auth, accessToken: '' } }
-        }),
-      reset: () =>
-        set((state) => {
-          removeCookie(ACCESS_TOKEN)
-          return {
-            ...state,
-            auth: { ...state.auth, user: null, accessToken: '' },
-          }
-        }),
-    },
-  }
-})
+      isAuthenticated: false,
+      isChecking: false,
+      isInitialized: false,
+    }),
+}))
