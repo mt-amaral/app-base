@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import type { ApiResponse } from '@/services/ApiResponse'
 
-const apiUrl = "https://localhost:8091/api/v1"
+const apiUrl = import.meta.env.VITE_API_URL
 
 export const api = axios.create({
     baseURL: apiUrl,
@@ -75,9 +75,9 @@ api.interceptors.response.use(
             } catch (refreshError) {
                 useAuthStore.getState().clearAuth()
                 if (window.location.pathname !== '/signIn') {
-                   window.location.href = '/signIn'
+                    window.location.href = '/signIn'
                 }
-                
+
                 processQueue(refreshError)
                 return Promise.reject(refreshError)
             } finally {

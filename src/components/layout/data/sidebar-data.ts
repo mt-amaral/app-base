@@ -1,7 +1,5 @@
 import {
   LayoutDashboard,
-  Monitor,
-  Bell,
   Palette,
   Settings,
   Wrench,

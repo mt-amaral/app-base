@@ -1,15 +1,15 @@
-import { getRouteApi } from '@tanstack/react-router'
+// import { getRouteApi } from '@tanstack/react-router'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { Separator } from '@/components/ui/separator'
 
-const route = getRouteApi('/_authenticated/users/')
+// const route = getRouteApi('/_authenticated/users/')
 
 export function Users() {
-  const search = route.useSearch()
-  const navigate = route.useNavigate()
+  // const search = route.useSearch()
+  // const navigate = route.useNavigate()
 
   return (
     <>

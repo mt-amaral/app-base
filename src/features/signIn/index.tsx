@@ -1,6 +1,20 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { Loader2 } from 'lucide-react'
+
 import { useAuthStore } from '@/stores/auth-store'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 
 export function SignIn() {
     const navigate = useNavigate()
@@ -38,54 +52,95 @@ export function SignIn() {
     }
 
     return (
-        <div className='flex min-h-screen items-center justify-center p-6'>
-            <div className='w-full max-w-sm rounded-md border p-6'>
-                <h1 className='mb-4 text-xl font-semibold'>Entrar</h1>
+        <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4 py-8">
+            <div className="w-full max-w-md">
+                <Card className="border-border/60 shadow-sm">
+                    <CardHeader className="space-y-1">
+                        <CardTitle className="text-2xl font-semibold tracking-tight">
+                            Entrar
+                        </CardTitle>
+                        <CardDescription>
+                            Informe seu email e senha para acessar o sistema.
+                        </CardDescription>
+                    </CardHeader>
 
-                <form onSubmit={handleSubmit} className='space-y-4'>
-                    <div>
-                        <label className='mb-1 block text-sm'>Email</label>
-                        <input
-                            type='email'
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className='w-full rounded-md border px-3 py-2'
-                            placeholder='admin@teste.com'
-                        />
-                    </div>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <div className="space-y-2">
+                                <Label htmlFor="email">Email</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="admin@teste.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    disabled={loading}
+                                    autoComplete="email"
+                                    required
+                                />
+                            </div>
 
-                    <div>
-                        <label className='mb-1 block text-sm'>Senha</label>
-                        <input
-                            type='password'
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className='w-full rounded-md border px-3 py-2'
-                            placeholder='••••••••'
-                        />
-                    </div>
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between gap-2">
+                                    <Label htmlFor="password">Senha</Label>
+                                    <button
+                                        type="button"
+                                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                                    >
+                                        Esqueci minha senha
+                                    </button>
+                                </div>
 
-                    <label className='flex items-center gap-2 text-sm'>
-                        <input
-                            type='checkbox'
-                            checked={rememberMe}
-                            onChange={(e) => setRememberMe(e.target.checked)}
-                        />
-                        Lembrar de mim
-                    </label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    disabled={loading}
+                                    autoComplete="current-password"
+                                    required
+                                />
+                            </div>
 
-                    {errorMessage ? (
-                        <p className='text-sm text-red-500'>{errorMessage}</p>
-                    ) : null}
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id="rememberMe"
+                                    checked={rememberMe}
+                                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                                    disabled={loading}
+                                />
+                                <Label
+                                    htmlFor="rememberMe"
+                                    className="text-sm font-normal text-muted-foreground"
+                                >
+                                    Lembrar de mim
+                                </Label>
+                            </div>
 
-                    <button
-                        type='submit'
-                        disabled={loading}
-                        className='w-full rounded-md border px-3 py-2'
-                    >
-                        {loading ? 'Entrando...' : 'Entrar'}
-                    </button>
-                </form>
+                            {errorMessage ? (
+                                <div
+                                    className={cn(
+                                        'rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive'
+                                    )}
+                                >
+                                    {errorMessage}
+                                </div>
+                            ) : null}
+
+                            <Button type="submit" className="w-full" disabled={loading}>
+                                {loading ? (
+                                    <span className="flex items-center gap-2">
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                        Entrando...
+                                    </span>
+                                ) : (
+                                    'Entrar'
+                                )}
+                            </Button>
+                        </form>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     )
