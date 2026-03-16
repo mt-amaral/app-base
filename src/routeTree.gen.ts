@@ -15,8 +15,8 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedUsersRolesRouteImport } from './routes/_authenticated/users/roles'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
-import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -49,16 +49,15 @@ const AuthenticatedSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedUsersRolesRoute = AuthenticatedUsersRolesRouteImport.update({
+  id: '/users/roles',
+  path: '/users/roles',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSettingsAppearanceRoute =
   AuthenticatedSettingsAppearanceRouteImport.update({
     id: '/appearance',
     path: '/appearance',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsAccountRoute =
-  AuthenticatedSettingsAccountRouteImport.update({
-    id: '/account',
-    path: '/account',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
 
@@ -66,16 +65,16 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/signIn/': typeof SignInIndexRoute
-  '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/users/roles': typeof AuthenticatedUsersRolesRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/signIn': typeof SignInIndexRoute
-  '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/users/roles': typeof AuthenticatedUsersRolesRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
 }
@@ -85,8 +84,8 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/signIn/': typeof SignInIndexRoute
-  '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/_authenticated/users/roles': typeof AuthenticatedUsersRolesRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
 }
@@ -96,16 +95,16 @@ export interface FileRouteTypes {
     | '/'
     | '/settings'
     | '/signIn/'
-    | '/settings/account'
     | '/settings/appearance'
+    | '/users/roles'
     | '/settings/'
     | '/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/signIn'
-    | '/settings/account'
     | '/settings/appearance'
+    | '/users/roles'
     | '/settings'
     | '/users'
   id:
@@ -114,8 +113,8 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/'
     | '/signIn/'
-    | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
+    | '/_authenticated/users/roles'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
   fileRoutesById: FileRoutesById
@@ -169,6 +168,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/users/roles': {
+      id: '/_authenticated/users/roles'
+      path: '/users/roles'
+      fullPath: '/users/roles'
+      preLoaderRoute: typeof AuthenticatedUsersRolesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/appearance': {
       id: '/_authenticated/settings/appearance'
       path: '/appearance'
@@ -176,25 +182,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
-    '/_authenticated/settings/account': {
-      id: '/_authenticated/settings/account'
-      path: '/account'
-      fullPath: '/settings/account'
-      preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
   }
 }
 
 interface AuthenticatedSettingsRouteRouteChildren {
-  AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
 const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
   {
-    AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
     AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
     AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
   }
@@ -207,12 +204,14 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedUsersRolesRoute: typeof AuthenticatedUsersRolesRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedUsersRolesRoute: AuthenticatedUsersRolesRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }
 

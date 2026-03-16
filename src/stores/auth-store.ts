@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { authService } from '@/services/auth-service'
+import { accountService } from '@/services/Account/account-service'
 
 interface AuthUser {
   name: string
@@ -33,7 +33,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   login: async (payload) => {
     try {
-      const result = await authService.login(payload)
+      const result = await accountService.login(payload)
 
       set({
         user: result.data ?? null,
@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isChecking: true })
 
     try {
-      const result = await authService.checkMe()
+      const result = await accountService.checkMe()
 
       set({
         user: result.data ?? null,
@@ -81,7 +81,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     set({ isChecking: true })
     try {
-      const result = await authService.checkMe()
+      const result = await accountService.checkMe()
       set({
         user: result.data ?? null,
         isAuthenticated: true,
@@ -100,7 +100,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   logout: async () => {
     try {
-      await authService.logout()
+      await accountService.logout()
     } finally {
       set({
         user: null,

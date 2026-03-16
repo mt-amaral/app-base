@@ -1,26 +1,23 @@
 import { PageHeader } from '@/components/layout/page-header'
 import { Main } from '@/components/layout/main'
 import { Separator } from '@/components/ui/separator'
-import { usePageBreadcrumb } from '@/hooks/use-page-breadcrumb'
 
-export function Dashboard() {
-  const breadcrumb = usePageBreadcrumb()
+export function Roles() {
 
   return (
     <>
-      {/* ===== Top Heading ===== */}
       <PageHeader />
 
-      {/* ===== Main ===== */}
-      <Main>
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='space-y-0.5'>
           <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
-            Dashboard
+            Roles
           </h1>
           <p className='text-muted-foreground'>
-            Manage your Data.
+            Manage your roles.
           </p>
         </div>
+
         <Separator className='my-4 lg:my-6' />
       </Main>
     </>

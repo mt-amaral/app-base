@@ -1,21 +1,14 @@
 import { Outlet } from '@tanstack/react-router'
-import { Palette, Wrench, UserCog } from 'lucide-react'
-import { Separator } from '@/components/ui/separator'
-import { Header } from '@/components/layout/header'
+import { Palette, Wrench } from 'lucide-react'
+import { PageHeader } from '@/components/layout/page-header'
 import { Main } from '@/components/layout/main'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
+import { Separator } from '@/components/ui/separator'
 import { SidebarNav } from './components/sidebar-nav'
 
 const sidebarNavItems = [
   {
-    title: 'Profile',
-    href: '/settings',
-    icon: <UserCog size={18} />,
-  },
-  {
     title: 'Account',
-    href: '/settings/account',
+    href: '/settings',
     icon: <Wrench size={18} />,
   },
   {
@@ -26,15 +19,10 @@ const sidebarNavItems = [
 ]
 
 export function Settings() {
+
   return (
     <>
-      {/* ===== Top Heading ===== */}
-      <Header fixed>
-        <div className='ms-auto flex items-center space-x-4'>
-          <Search />
-          <ThemeSwitch />
-        </div>
-      </Header>
+      <PageHeader fixed />
 
       <Main fixed>
         <div className='space-y-0.5'>
@@ -45,11 +33,14 @@ export function Settings() {
             Manage your account settings.
           </p>
         </div>
+
         <Separator className='my-4 lg:my-6' />
-        <div className='flex flex-1 flex-col space-y-2 overflow-hidden md:space-y-2 lg:flex-row lg:space-y-0 lg:space-x-12'>
+
+        <div className='flex flex-1 flex-col space-y-2 overflow-hidden md:space-y-2 lg:flex-row lg:space-x-12 lg:space-y-0'>
           <aside className='top-0 lg:sticky lg:w-1/5'>
             <SidebarNav items={sidebarNavItems} />
           </aside>
+
           <div className='flex w-full overflow-y-hidden p-1'>
             <Outlet />
           </div>

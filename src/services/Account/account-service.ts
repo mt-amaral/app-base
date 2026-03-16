@@ -1,5 +1,5 @@
 import { api } from '@/lib/api'
-import { ApiResponse } from './ApiResponse'
+import { ApiResponse } from '../ApiResponse'
 
 
 interface LoginPayload {
@@ -15,7 +15,7 @@ interface MeResponse {
     roles?: string[]
 }
 
-export const authService = {
+export const accountService = {
     async login(payload: LoginPayload) {
         const { data } = await api.post<ApiResponse<MeResponse>>(
             '/Account/Login',

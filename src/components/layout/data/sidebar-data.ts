@@ -1,9 +1,6 @@
 import {
   LayoutDashboard,
-  Palette,
   Settings,
-  Wrench,
-  UserCog,
   Users,
   Command,
 } from 'lucide-react'
@@ -28,8 +25,17 @@ export const sidebarData: Omit<SidebarData, 'user'> = {
         },
         {
           title: 'Users',
-          url: '/users',
           icon: Users,
+          items: [
+            {
+              title: 'User',
+              url: '/users',
+            },
+            {
+              title: 'Role',
+              url: '/users/roles',
+            }
+          ]
         },
       ],
     },
@@ -38,24 +44,8 @@ export const sidebarData: Omit<SidebarData, 'user'> = {
       items: [
         {
           title: 'Settings',
+          url: '/settings',
           icon: Settings,
-          items: [
-            {
-              title: 'Profile',
-              url: '/settings',
-              icon: UserCog,
-            },
-            {
-              title: 'Account',
-              url: '/settings/account',
-              icon: Wrench,
-            },
-            {
-              title: 'Appearance',
-              url: '/settings/appearance',
-              icon: Palette,
-            }
-          ],
         },
       ],
     },
