@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Main } from '@/components/layout/main'
 import { Separator } from '@/components/ui/separator'
-import { UserTable } from './components/user-table'
+import { UserTable, type UserTableItem } from './components/user-table'
 import { userService, type User } from '@/services/User/user-service'
+import { roleService, type Role } from '@/services/Role/role-service'
 import { PageHeader } from '@/components/layout/page-header'
 
 export function Users() {
-  const [users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<UserTableItem[]>([])
+  const [roles, setRoles] = useState<Role[]>([])
   const [loading, setLoading] = useState(true)
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -15,19 +17,38 @@ export function Users() {
   const [totalCount, setTotalCount] = useState(0)
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true)
 
-        const response = await userService.listUsers({
-          currentPage,
-          pageSize,
-        })
+        const [usersResponse, rolesResponse] = await Promise.all([
+          userService.listUsers({
+            currentPage,
+            pageSize,
+          }),
+          roleService.listRoles(),
+        ])
 
-        setUsers(response.data ?? [])
-        setCurrentPage(response.currentPage)
-        setTotalPages(response.totalPages)
-        setTotalCount(response.totalCount)
+        const fetchedRoles = rolesResponse.data ?? []
+        const rolesMap = new Map<number, string>(
+          fetchedRoles.map((role: Role) => [role.id, role.name])
+        )
+
+        const mappedUsers: UserTableItem[] = (usersResponse.data ?? []).map(
+          (user: User) => ({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            roleId: user.roleId,
+            roleName: rolesMap.get(user.roleId) ?? 'Sem role',
+          })
+        )
+
+        setRoles(fetchedRoles)
+        setUsers(mappedUsers)
+        setCurrentPage(usersResponse.currentPage)
+        setTotalPages(usersResponse.totalPages)
+        setTotalCount(usersResponse.totalCount)
       } catch (error) {
         console.error('Failed to fetch users', error)
       } finally {
@@ -35,12 +56,13 @@ export function Users() {
       }
     }
 
-    fetchUsers()
+    fetchData()
   }, [currentPage, pageSize])
 
   return (
     <>
       <PageHeader />
+
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='space-y-0.5'>
           <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
@@ -58,9 +80,12 @@ export function Users() {
         ) : (
           <UserTable
             users={users}
+            roles={roles.map((role) => ({
+              id: role.id,
+              name: role.name,
+            }))}
             currentPage={currentPage}
             totalPages={totalPages}
-            pageSize={pageSize}
             totalCount={totalCount}
             onPageChange={setCurrentPage}
           />

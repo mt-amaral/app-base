@@ -5,6 +5,7 @@ export interface User {
     id: number
     name: string
     email: string
+    roleId: number
 }
 
 interface ListUsersParams {
@@ -21,6 +22,7 @@ export const userService = {
                 withCredentials: true,
             }
         )
+
         return data
     },
 }
