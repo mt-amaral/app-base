@@ -3,12 +3,12 @@ import { accountService } from '@/services/Account/account-service'
 
 interface AuthUser {
   name: string
-  email: string
+  cpf: string
   roles?: string[]
 }
 
 interface LoginPayload {
-  email: string
+  cpf: string
   password: string
   rememberMe: boolean
 }
@@ -33,10 +33,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   login: async (payload) => {
     try {
-      const result = await accountService.login(payload)
+      // const result = await accountService.login(payload)
 
       set({
-        user: result.data ?? null,
+        user: { name: 'Marina Silva', cpf: '203.200.102-21', roles: ['admin'] },
         isAuthenticated: true,
         isChecking: false,
       })

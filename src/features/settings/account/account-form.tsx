@@ -1,6 +1,4 @@
-import { z } from 'zod'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,18 +12,11 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-
-const accountFormSchema = z.object({
-  name: z
-    .string()
-    .min(1, 'Please enter your name.')
-    .min(2, 'Name must be at least 2 characters.')
-    .max(30, 'Name must not be longer than 30 characters.'),
-  dob: z.date('Please select your date of birth.'),
-  language: z.string('Please select a language.'),
-})
-
-type AccountFormValues = z.infer<typeof accountFormSchema>
+interface AccountFormValues {
+  name: string
+  dob?: Date
+  language?: string
+}
 
 // This can come from your database or API.
 const defaultValues: Partial<AccountFormValues> = {
@@ -34,7 +25,6 @@ const defaultValues: Partial<AccountFormValues> = {
 
 export function AccountForm() {
   const form = useForm<AccountFormValues>({
-    resolver: zodResolver(accountFormSchema),
     defaultValues,
   })
 
@@ -48,6 +38,11 @@ export function AccountForm() {
         <FormField
           control={form.control}
           name='name'
+          rules={{
+            required: 'Please enter your name.',
+            minLength: { value: 2, message: 'Name must be at least 2 characters.' },
+            maxLength: { value: 30, message: 'Name must not be longer than 30 characters.' }
+          }}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>

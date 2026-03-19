@@ -11,7 +11,7 @@ interface LoginPayload {
 
 interface MeResponse {
     name: string
-    email: string
+    cpf: string
     roles?: string[]
 }
 

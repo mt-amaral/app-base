@@ -20,7 +20,7 @@ export function AppSidebar() {
   // Adapter for NavUser props
   const user = {
     name: authUser?.name || 'User',
-    email: authUser?.email || '',
+    cpf: authUser?.cpf || '',
     avatar: '', // Add a dummy or default avatar path if you'd like
   }
 
