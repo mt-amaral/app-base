@@ -1,6 +1,6 @@
 import { Main } from '@/components/layout/main'
 import { Separator } from '@/components/ui/separator'
-import { RouterSupervisorTable } from './components/router-supervisor-table'
+import { RouterSupervisorTable } from './components/router-supervisor-steps'
 import { PageHeader } from '@/components/layout/page-header'
 
 export function RouterSupervisors() {
