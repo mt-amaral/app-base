@@ -38,7 +38,7 @@ export const sidebarData: Omit<SidebarData, 'user'> = {
           ]
         },
         {
-          title: 'Router Supervisors',
+          title: 'Minhas Rotas',
           url: '/router-supervisors',
           icon: Users,
         },
