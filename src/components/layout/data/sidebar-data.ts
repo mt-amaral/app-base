@@ -37,6 +37,11 @@ export const sidebarData: Omit<SidebarData, 'user'> = {
             }
           ]
         },
+        {
+          title: 'Router Supervisors',
+          url: '/router-supervisors',
+          icon: Users,
+        },
       ],
     },
     {
