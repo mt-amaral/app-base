@@ -23,7 +23,7 @@ export function RouteTimeline({ items }: RouteTimelineProps) {
                             <div 
                                 className={cn(
                                     "absolute top-[7px] left-[50%] h-[2px] w-full",
-                                    (isExecuted && nextItemExecuted) ? "bg-[#8BC34A]" : "bg-[#E0E0E0]"
+                                    (isExecuted && nextItemExecuted) ? "bg-emerald-500" : "bg-muted"
                                 )}
                                 style={{ zIndex: 0 }}
                             />
@@ -34,8 +34,8 @@ export function RouteTimeline({ items }: RouteTimelineProps) {
                             className={cn(
                                 "relative z-10 h-[16px] w-[16px] rounded-full flex-shrink-0 transition-colors",
                                 isExecuted 
-                                    ? "bg-[#8BC34A]" 
-                                    : "bg-[#E0E0E0]"
+                                    ? "bg-emerald-500" 
+                                    : "bg-muted"
                             )}
                         />
                         
