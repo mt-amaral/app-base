@@ -18,7 +18,7 @@ interface WeekdayRowProps {
 
 export function WeekdayRow({ rota }: WeekdayRowProps) {
     return (
-        <div className="flex items-center border-b border-border/40 py-6 last:border-0 hover:bg-muted/10 transition-colors px-4">
+        <section className="flex items-center border-b border-border/40 py-4 last:border-0 hover:bg-muted/10 transition-colors px-4">
             <div className="w-[200px] shrink-0">
                 <h3 className="text-[13px] font-semibold text-foreground/80">
                     {DIAS_SEMANA[rota.diaSemana]}
@@ -31,10 +31,10 @@ export function WeekdayRow({ rota }: WeekdayRowProps) {
             </div>
             
             <div className="ml-4 shrink-0 pl-4">
-                <Button variant="outline" size="sm" className="text-[11px] font-medium text-foreground/80 rounded-md bg-white border-border shadow-sm h-8 px-4">
-                    Editar Status da rota
+                <Button variant="outline" size="sm" className="text-[11px] font-medium text-white rounded-md bg-primary border-border shadow-sm h-8 px-4">
+                    Solicitar Alteração
                 </Button>
             </div>
-        </div>
+        </section>
     )
 }

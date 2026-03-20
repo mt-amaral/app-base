@@ -41,8 +41,8 @@ export function PageHeader({ fixed }: PageHeaderProps) {
             </div>
 
             <div className='ms-auto flex items-center space-x-4'>
-                <Search />
-                <ThemeSwitch />
+                {/* <Search /> */}
+                {/* <ThemeSwitch /> */}
             </div>
         </Header>
     )

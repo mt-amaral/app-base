@@ -20,6 +20,10 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
         { label: 'Users' },
         { label: 'Roles' },
     ],
+    '/router-supervisors': [
+        { label: 'Rotas' },
+        { label: 'Supervisores' },
+    ],
 }
 
 const defaultBreadcrumb: BreadcrumbItem[] = [
