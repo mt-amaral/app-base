@@ -8,7 +8,7 @@ export function RouterSupervisorTable() {
     return (
         <Card className="border border-border/60 shadow-sm overflow-hidden bg-white mx-auto rounded-lg">
             <div className="p-6 pb-2">
-                <h2 className="text-[24px] tracking-tight font-light text-primary mb-6">Rotas Semanais</h2>
+                {/* <h2 className="text-[24px] tracking-tight font-light text-primary mb-6">Rotas Semanais</h2> */}
                 
                 <div className="flex justify-center mb-6">
                     <div className="inline-flex items-center rounded-full border border-border/60 p-1 bg-white shadow-sm">

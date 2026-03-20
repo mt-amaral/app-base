@@ -1,6 +1,4 @@
 import {
-  LayoutDashboard,
-  Settings,
   Users,
   Command,
 } from 'lucide-react'
@@ -19,38 +17,9 @@ export const sidebarData: Omit<SidebarData, 'user'> = {
       title: 'General',
       items: [
         {
-          title: 'Dashboard',
-          url: '/',
-          icon: LayoutDashboard,
-        },
-        {
-          title: 'Users',
-          icon: Users,
-          items: [
-            {
-              title: 'User',
-              url: '/users',
-            },
-            {
-              title: 'Role',
-              url: '/users/roles',
-            }
-          ]
-        },
-        {
           title: 'Minhas Rotas',
           url: '/router-supervisors',
           icon: Users,
-        },
-      ],
-    },
-    {
-      title: 'Other',
-      items: [
-        {
-          title: 'Settings',
-          url: '/settings',
-          icon: Settings,
         },
       ],
     },
