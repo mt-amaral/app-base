@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import Webcam from 'react-webcam'
-import { MapPin, CheckCircle2, Loader2, AlertCircle } from 'lucide-react'
+import { MapPin, CheckCircle2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -30,6 +30,7 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { CameraSection } from './camera-section'
+import { LocationStatus } from './location-status'
 import { useGeolocation } from '@/hooks/use-geolocation'
 
 const DIAS_SEMANA: Record<number, string> = {
@@ -53,14 +54,28 @@ interface FormValues {
 export function FreelanceCheckinDialog() {
     const [open, setOpen] = useState(false)
     const webcamRef = useRef<Webcam>(null)
-    const { latitude, longitude, loading: locationLoading, error: locationError, getLocation, clearLocation } = useGeolocation()
-    
+    const {
+        latitude,
+        longitude,
+        loading: locationLoading,
+        error: locationError,
+        getLocation,
+        clearLocation
+    } = useGeolocation()
+
     const form = useForm<FormValues>({
-        defaultValues: { localId: '', observation: '', photo: null, latitude: null, longitude: null }
+        defaultValues: {
+            localId: '',
+            observation: '',
+            photo: null,
+            latitude: null,
+            longitude: null
+        }
     })
 
     const photo = form.watch('photo')
-    const nomeDia = DIAS_SEMANA[new Date().getDay()]
+    const DIA_ATUAL = new Date().getDay()
+    const nomeDia = DIAS_SEMANA[DIA_ATUAL]
 
     // Captura localização ao abrir o modal
     useEffect(() => {
@@ -105,30 +120,22 @@ export function FreelanceCheckinDialog() {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <DialogHeader>
-                            <DialogTitle className="flex items-center gap-2">
-                                <MapPin className="h-6 w-6 text-primary" /> 
-                                Check-in Freelance - {nomeDia}
+                            <DialogTitle className="flex items-center gap-2 text-primary font-bold">
+                                <MapPin className="h-6 w-6" />
+                                Check-in - Freelance - {nomeDia}
                             </DialogTitle>
-                            <DialogDescription>Confirme sua localização e capture uma foto para registrar sua entrada.</DialogDescription>
+                            <DialogDescription>
+                                Verifique sua localização e capture uma foto para confirmar sua entrada.
+                            </DialogDescription>
                         </DialogHeader>
 
                         <div className="space-y-4">
-                            {/* Location Status Message (Feedback Visual) */}
-                            <div className={`p-3 rounded-lg border flex items-center gap-3 text-xs font-medium transition-all ${
-                                locationError ? 'bg-red-50 text-red-600 border-red-100' :
-                                (!latitude && locationLoading) ? 'bg-amber-50 text-amber-600 border-amber-100' :
-                                latitude ? 'bg-green-50 text-green-700 border-green-100' : 'bg-muted/30 border-border/50'
-                            }`}>
-                                {locationError ? (
-                                    <> <AlertCircle className="h-4 w-4" /> {locationError} </>
-                                ) : (!latitude && locationLoading) ? (
-                                    <> <Loader2 className="h-4 w-4 animate-spin" /> Buscando sua localização... </>
-                                ) : latitude ? (
-                                    <> <CheckCircle2 className="h-4 w-4 text-green-500" /> Localização confirmada! ({latitude.toFixed(4)}, {longitude?.toFixed(4)}) </>
-                                ) : (
-                                    <> <MapPin className="h-4 w-4" /> Localização pendente. </>
-                                )}
-                            </div>
+                            <LocationStatus 
+                                latitude={latitude} 
+                                longitude={longitude} 
+                                loading={locationLoading} 
+                                error={locationError} 
+                            />
 
                             <CameraSection 
                                 photo={photo}
@@ -147,7 +154,9 @@ export function FreelanceCheckinDialog() {
                                             <FormLabel className="font-semibold text-foreground/80">Unidade de Atendimento</FormLabel>
                                             <Select onValueChange={field.onChange} value={field.value}>
                                                 <FormControl>
-                                                    <SelectTrigger className="w-full py-5"><SelectValue placeholder="Selecione o local..." /></SelectTrigger>
+                                                    <SelectTrigger className="w-full py-5">
+                                                        <SelectValue placeholder="Selecione o local..." />
+                                                    </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
                                                     <SelectItem value="1">Unidade Faria Lima</SelectItem>
@@ -167,7 +176,11 @@ export function FreelanceCheckinDialog() {
                                         <FormItem>
                                             <FormLabel className="font-semibold text-foreground/80">Observações (opcional)</FormLabel>
                                             <FormControl>
-                                                <Textarea placeholder="Opcional..." className="resize-none h-20 bg-muted/5 shadow-inner" {...field} />
+                                                <Textarea 
+                                                    placeholder="Algum detalhe importante sobre a chegada?" 
+                                                    className="resize-none h-24 bg-muted/5 shadow-inner border shadow-sm focus-visible:ring-primary/30" 
+                                                    {...field} 
+                                                />
                                             </FormControl>
                                         </FormItem>
                                     )}
@@ -177,8 +190,12 @@ export function FreelanceCheckinDialog() {
 
                         <DialogFooter className="gap-2 sm:gap-0 pt-2 border-t">
                             <Button type="button" variant="ghost" onClick={() => handleReset()}>Cancelar</Button>
-                            <Button type="submit" className="gap-2 px-8 min-w-[140px]" disabled={!form.watch('localId') || !photo || locationLoading}>
-                                <CheckCircle2 className="h-4 w-4" /> Confirmar Check-in
+                            <Button 
+                                type="submit" 
+                                className="gap-2 px-8 min-w-[140px] font-bold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all" 
+                                disabled={!form.watch('localId') || !photo || locationLoading}
+                            >
+                                <CheckCircle2 className="h-4 w-4" /> Confirmar Entrada
                             </Button>
                         </DialogFooter>
                     </form>
