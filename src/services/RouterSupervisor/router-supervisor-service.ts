@@ -1,28 +1,33 @@
 import { api } from '@/lib/api'
-import { PagedResponse } from '../PagedResponse'
 
-export interface RouterSupervisor {
+export interface RotaExecucao {
     id: number
-    name: string
-    cpf: string
-    active: boolean
+    dataExecucao: string
+    status: string
+    latitude: number
+    longitude: number
 }
 
-interface ListRouterSupervisorsParams {
-    currentPage?: number
-    pageSize?: number
+export interface RotaItem {
+    id: number
+    rotaDiaSupervisor_Id: number
+    localUnidade_Id: number
+    localUnidadeNome: string
+    ordem: number
+    rotaExecucao: RotaExecucao | null
+}
+
+export interface RotaDiaSupervisor {
+    id: number
+    supervisor_Id: number
+    supervisorNome: string
+    diaSemana: number
+    itens: RotaItem[]
 }
 
 export const routerSupervisorService = {
-    async listRouterSupervisors(params?: ListRouterSupervisorsParams) {
-        const { data } = await api.get<PagedResponse<RouterSupervisor[]>>(
-            '/supervisor',
-            // {
-            //     params,
-            //     withCredentials: true,
-            // }
-        )
-
+    async getRotasSupervisor() {
+        const { data } = await api.get<RotaDiaSupervisor[]>('/RotaDiaSupervisor')
         return data
     },
 }

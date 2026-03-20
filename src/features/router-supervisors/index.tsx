@@ -1,6 +1,6 @@
 import { Main } from '@/components/layout/main'
 import { Separator } from '@/components/ui/separator'
-import { RouterSupervisorTable } from './components/router-supervisor-steps'
+import { RouterSupervisorSteps } from './components/router-supervisor-steps'
 import { PageHeader } from '@/components/layout/page-header'
 import { CheckinDialog } from './components/checkin-dialog'
 
@@ -27,7 +27,7 @@ export function RouterSupervisors() {
                     <Separator className='my-4 lg:my-6' />
 
                     <div className='px-4 pb-8'>
-                        <RouterSupervisorTable />
+                        <RouterSupervisorSteps />
                     </div>
                 </div>
             </Main>

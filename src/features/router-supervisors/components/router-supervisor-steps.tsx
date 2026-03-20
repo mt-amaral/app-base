@@ -1,10 +1,17 @@
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { WeekdayRow } from './weekday-row'
-import { MOCK_ROUTES } from '../data/mock-routes'
+import { useQuery } from '@tanstack/react-query'
+import { routerSupervisorService } from '@/services/RouterSupervisor/router-supervisor-service'
 
-export function RouterSupervisorTable() {
+export function RouterSupervisorSteps() {
+
+    const { data: rotas, isLoading } = useQuery({
+        queryKey: ['rotas-supervisor'],
+        queryFn: routerSupervisorService.getRotasSupervisor
+    })
+    
     return (
         <Card className="border border-border/60 shadow-sm overflow-hidden bg-white mx-auto rounded-lg">
             <div className="p-6 pb-2">
@@ -38,9 +45,19 @@ export function RouterSupervisorTable() {
                 </div>
                 
                 <div className="flex flex-col">
-                    {MOCK_ROUTES.map((rota) => (
-                        <WeekdayRow key={rota.id} rota={rota} />
-                    ))}
+                    {isLoading ? (
+                        <div className="flex justify-center py-8">
+                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                        </div>
+                    ) : rotas && rotas.length > 0 ? (
+                        rotas.map((rota) => (
+                            <WeekdayRow key={rota.id} rota={rota} />
+                        ))
+                    ) : (
+                        <div className="py-8 text-center text-[12px] text-muted-foreground">
+                            Nenhuma rota encontrada para o período.
+                        </div>
+                    )}
                 </div>
             </div>
         </Card>

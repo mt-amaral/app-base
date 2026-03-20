@@ -7,9 +7,9 @@ import { type SidebarData } from '../types'
 export const sidebarData: Omit<SidebarData, 'user'> = {
   teams: [
     {
-      name: 'Shadcn Admin',
+      name: 'Impacto',
       logo: Command,
-      plan: 'Vite + ShadcnUI',
+      plan: 'Check-in',
     }
   ],
   navGroups: [
