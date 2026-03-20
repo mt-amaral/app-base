@@ -15,6 +15,7 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedRouterSupervisorsIndexRouteImport } from './routes/_authenticated/router-supervisors/index'
+import { Route as AuthenticatedFreelanceScheduleIndexRouteImport } from './routes/_authenticated/freelance-schedule/index'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -49,6 +50,12 @@ const AuthenticatedRouterSupervisorsIndexRoute =
     path: '/router-supervisors/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedFreelanceScheduleIndexRoute =
+  AuthenticatedFreelanceScheduleIndexRouteImport.update({
+    id: '/freelance-schedule/',
+    path: '/freelance-schedule/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsAppearanceRoute =
   AuthenticatedSettingsAppearanceRouteImport.update({
     id: '/appearance',
@@ -61,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/signIn/': typeof SignInIndexRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/freelance-schedule/': typeof AuthenticatedFreelanceScheduleIndexRoute
   '/router-supervisors/': typeof AuthenticatedRouterSupervisorsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
 }
@@ -68,6 +76,7 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/signIn': typeof SignInIndexRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/freelance-schedule': typeof AuthenticatedFreelanceScheduleIndexRoute
   '/router-supervisors': typeof AuthenticatedRouterSupervisorsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
 }
@@ -78,6 +87,7 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/signIn/': typeof SignInIndexRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/_authenticated/freelance-schedule/': typeof AuthenticatedFreelanceScheduleIndexRoute
   '/_authenticated/router-supervisors/': typeof AuthenticatedRouterSupervisorsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
 }
@@ -88,6 +98,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signIn/'
     | '/settings/appearance'
+    | '/freelance-schedule/'
     | '/router-supervisors/'
     | '/settings/'
   fileRoutesByTo: FileRoutesByTo
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/signIn'
     | '/settings/appearance'
+    | '/freelance-schedule'
     | '/router-supervisors'
     | '/settings'
   id:
@@ -104,6 +116,7 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/signIn/'
     | '/_authenticated/settings/appearance'
+    | '/_authenticated/freelance-schedule/'
     | '/_authenticated/router-supervisors/'
     | '/_authenticated/settings/'
   fileRoutesById: FileRoutesById
@@ -157,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouterSupervisorsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/freelance-schedule/': {
+      id: '/_authenticated/freelance-schedule/'
+      path: '/freelance-schedule'
+      fullPath: '/freelance-schedule/'
+      preLoaderRoute: typeof AuthenticatedFreelanceScheduleIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/appearance': {
       id: '/_authenticated/settings/appearance'
       path: '/appearance'
@@ -186,12 +206,15 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedFreelanceScheduleIndexRoute: typeof AuthenticatedFreelanceScheduleIndexRoute
   AuthenticatedRouterSupervisorsIndexRoute: typeof AuthenticatedRouterSupervisorsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedFreelanceScheduleIndexRoute:
+    AuthenticatedFreelanceScheduleIndexRoute,
   AuthenticatedRouterSupervisorsIndexRoute:
     AuthenticatedRouterSupervisorsIndexRoute,
 }

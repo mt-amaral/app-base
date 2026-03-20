@@ -1,6 +1,7 @@
 import {
   Users,
   Command,
+  Clock,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -20,6 +21,11 @@ export const sidebarData: Omit<SidebarData, 'user'> = {
           title: 'Minhas Rotas',
           url: '/router-supervisors',
           icon: Users,
+        },
+        {
+          title: 'Meu Ponto',
+          url: '/freelance-schedule',
+          icon: Clock,
         },
       ],
     },
