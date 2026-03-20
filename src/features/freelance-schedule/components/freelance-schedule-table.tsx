@@ -24,6 +24,8 @@ interface FreelanceScheduleTableProps {
 }
 
 export function FreelanceScheduleTable({ items }: FreelanceScheduleTableProps) {
+
+    const isExistsItems: boolean = items.length === 0;
     return (
         <div className="rounded-md border border-border/50 bg-white overflow-hidden">
             <Table>
@@ -32,13 +34,13 @@ export function FreelanceScheduleTable({ items }: FreelanceScheduleTableProps) {
                         <TableHead className="font-semibold text-foreground text-left pl-6">Dia da semana</TableHead>
                         <TableHead className="font-semibold text-foreground text-center">Horário estabelecido</TableHead>
                         <TableHead className="font-semibold text-foreground text-center">Check-in Entrada</TableHead>
-                        <TableHead className="font-semibold text-foreground text-center">Check-in Saída</TableHead>
+                        <TableHead className="font-semibold text-foreground text-center">Check-out Saída</TableHead>
                         <TableHead className="font-semibold text-foreground text-center">Status</TableHead>
                     </TableRow>
                 </TableHeader>
 
                 <TableBody>
-                    {items.length === 0 ? (
+                    {isExistsItems ? (
                          <TableRow>
                              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">Nenhum dado encontrado.</TableCell>
                          </TableRow>

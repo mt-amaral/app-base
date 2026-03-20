@@ -10,8 +10,7 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
     ],
 
     '/router-supervisors': [
-        { label: 'Rotas' },
-        { label: 'Supervisores' },
+        { label: 'Rotas do Supervisor' },
     ],
 
     '/freelance-schedule': [
@@ -20,8 +19,7 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
 }
 
 const defaultBreadcrumb: BreadcrumbItem[] = [
-    { label: 'Rotas' },
-    { label: 'Supervisores' },
+    { label: 'Rotas do Supervisor' },
 ]
 
 export function usePageBreadcrumb() {

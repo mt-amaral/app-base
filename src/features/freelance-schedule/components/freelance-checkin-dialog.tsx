@@ -30,7 +30,7 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { CameraSection } from './camera-section'
-import { LocationStatus } from './location-status'
+import { LocationStatus } from '../../../components/location-status'
 import { useGeolocation } from '@/hooks/use-geolocation'
 
 const DIAS_SEMANA: Record<number, string> = {
