@@ -1,8 +1,7 @@
 import { ChevronRight } from 'lucide-react'
 
 import { Header } from '@/components/layout/header'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
+
 import { usePageBreadcrumb } from '@/hooks/use-page-breadcrumb'
 
 type PageHeaderProps = {

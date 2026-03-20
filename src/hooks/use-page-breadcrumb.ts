@@ -6,20 +6,9 @@ type BreadcrumbItem = {
 
 const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
     '/settings': [
-        { label: 'Settings' },
         { label: 'Account' },
     ],
-    '/settings/appearance': [
-        { label: 'Settings' },
-        { label: 'Appearance' },
-    ],
-    '/users': [
-        { label: 'Users' }
-    ],
-    '/users/roles': [
-        { label: 'Users' },
-        { label: 'Roles' },
-    ],
+
     '/router-supervisors': [
         { label: 'Rotas' },
         { label: 'Supervisores' },
@@ -27,7 +16,8 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
 }
 
 const defaultBreadcrumb: BreadcrumbItem[] = [
-    { label: 'Dashboard' },
+    { label: 'Rotas' },
+    { label: 'Supervisores' },
 ]
 
 export function usePageBreadcrumb() {

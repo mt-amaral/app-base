@@ -13,10 +13,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as SignInIndexRouteImport } from './routes/signIn/index'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
-import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedRouterSupervisorsIndexRouteImport } from './routes/_authenticated/router-supervisors/index'
-import { Route as AuthenticatedUsersRolesRouteImport } from './routes/_authenticated/users/roles'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -39,11 +37,6 @@ const AuthenticatedSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
-  id: '/users/',
-  path: '/users/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
@@ -56,11 +49,6 @@ const AuthenticatedRouterSupervisorsIndexRoute =
     path: '/router-supervisors/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedUsersRolesRoute = AuthenticatedUsersRolesRouteImport.update({
-  id: '/users/roles',
-  path: '/users/roles',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedSettingsAppearanceRoute =
   AuthenticatedSettingsAppearanceRouteImport.update({
     id: '/appearance',
@@ -73,19 +61,15 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/signIn/': typeof SignInIndexRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/users/roles': typeof AuthenticatedUsersRolesRoute
   '/router-supervisors/': typeof AuthenticatedRouterSupervisorsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
-  '/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/signIn': typeof SignInIndexRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/users/roles': typeof AuthenticatedUsersRolesRoute
   '/router-supervisors': typeof AuthenticatedRouterSupervisorsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
-  '/users': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -94,10 +78,8 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/signIn/': typeof SignInIndexRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/_authenticated/users/roles': typeof AuthenticatedUsersRolesRoute
   '/_authenticated/router-supervisors/': typeof AuthenticatedRouterSupervisorsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
-  '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -106,19 +88,15 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signIn/'
     | '/settings/appearance'
-    | '/users/roles'
     | '/router-supervisors/'
     | '/settings/'
-    | '/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/signIn'
     | '/settings/appearance'
-    | '/users/roles'
     | '/router-supervisors'
     | '/settings'
-    | '/users'
   id:
     | '__root__'
     | '/_authenticated'
@@ -126,10 +104,8 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/signIn/'
     | '/_authenticated/settings/appearance'
-    | '/_authenticated/users/roles'
     | '/_authenticated/router-supervisors/'
     | '/_authenticated/settings/'
-    | '/_authenticated/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -167,13 +143,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/users/': {
-      id: '/_authenticated/users/'
-      path: '/users'
-      fullPath: '/users/'
-      preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -186,13 +155,6 @@ declare module '@tanstack/react-router' {
       path: '/router-supervisors'
       fullPath: '/router-supervisors/'
       preLoaderRoute: typeof AuthenticatedRouterSupervisorsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/users/roles': {
-      id: '/_authenticated/users/roles'
-      path: '/users/roles'
-      fullPath: '/users/roles'
-      preLoaderRoute: typeof AuthenticatedUsersRolesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings/appearance': {
@@ -224,18 +186,14 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedUsersRolesRoute: typeof AuthenticatedUsersRolesRoute
   AuthenticatedRouterSupervisorsIndexRoute: typeof AuthenticatedRouterSupervisorsIndexRoute
-  AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedUsersRolesRoute: AuthenticatedUsersRolesRoute,
   AuthenticatedRouterSupervisorsIndexRoute:
     AuthenticatedRouterSupervisorsIndexRoute,
-  AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
