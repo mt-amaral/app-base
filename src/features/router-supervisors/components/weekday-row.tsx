@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button'
 import { RouteTimeline } from './route-timeline'
 import { type RotaDiaSupervisor } from '../types'
+import { RequestAlterationDialog } from './request-alteration-dialog'
 
 const DIAS_SEMANA: Record<number, string> = {
     1: 'Segunda-feira',
@@ -31,9 +31,7 @@ export function WeekdayRow({ rota }: WeekdayRowProps) {
             </div>
             
             <div className="ml-4 shrink-0 pl-4">
-                <Button variant="outline" size="sm" className="text-[11px] font-medium text-white rounded-md bg-primary border-border shadow-sm h-8 px-4">
-                    Solicitar Alteração
-                </Button>
+                <RequestAlterationDialog rota={rota} />
             </div>
         </section>
     )
