@@ -13,6 +13,10 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
         { label: 'Rotas' },
         { label: 'Supervisores' },
     ],
+
+    '/freelance-schedule': [
+        { label: 'Meu Ponto' },
+    ],
 }
 
 const defaultBreadcrumb: BreadcrumbItem[] = [
