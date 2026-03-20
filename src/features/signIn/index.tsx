@@ -22,12 +22,10 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
 
 interface SignInFormValues {
     cpf: string
     password: string
-    rememberMe: boolean
 }
 
 export function SignIn() {
@@ -40,7 +38,6 @@ export function SignIn() {
         defaultValues: {
             cpf: '',
             password: '',
-            rememberMe: true,
         },
     })
 
@@ -52,11 +49,11 @@ export function SignIn() {
             console.log(data)
             const success = await login({
                 cpf: data.cpf,
-                password: data.password,
-                rememberMe: data.rememberMe,
+                senha: data.password,
             })
 
             if (!success) {
+
                 setErrorMessage('CPF ou senha inválidos')
                 return
             }
@@ -99,7 +96,7 @@ export function SignIn() {
                                             <FormLabel>CPF</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="000.000.000-00"
+                                                    placeholder="0000000"
                                                     disabled={loading}
                                                     autoComplete="username"
                                                     {...field}
@@ -137,25 +134,6 @@ export function SignIn() {
                                                 />
                                             </FormControl>
                                             <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="rememberMe"
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-row items-center space-x-2 space-y-0">
-                                            <FormControl>
-                                                <Checkbox
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                    disabled={loading}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="text-sm font-normal text-muted-foreground">
-                                                Lembrar de mim
-                                            </FormLabel>
                                         </FormItem>
                                     )}
                                 />

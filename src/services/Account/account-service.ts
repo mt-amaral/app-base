@@ -3,11 +3,16 @@ import { ApiResponse } from '../ApiResponse'
 
 
 interface LoginPayload {
-    email: string
-    password: string
-    rememberMe: boolean
+    cpf: string
+    senha?: string
 }
 
+interface LoginResponse {
+    tipoFuncionarioId: number
+    nome: string
+    token: string
+    matricula: string
+}
 
 interface MeResponse {
     name: string
@@ -17,11 +22,16 @@ interface MeResponse {
 
 export const accountService = {
     async login(payload: LoginPayload) {
-        const { data } = await api.post<ApiResponse<MeResponse>>(
-            '/Account/Login',
-            payload
-        )
-        return data
+        try {
+            const { data } = await api.post<LoginResponse>(
+                '/LoginNovoFuncionario',
+                payload
+            )
+            return data
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
     },
 
     async checkMe() {

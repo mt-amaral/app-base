@@ -5,12 +5,15 @@ interface AuthUser {
   name: string
   cpf: string
   roles?: string[]
+  tipoFuncionarioId?: number
+  matricula?: string
+  token?: string
 }
 
 interface LoginPayload {
   cpf: string
-  password: string
-  rememberMe: boolean
+  senha?: string
+  rememberMe?: boolean
 }
 
 interface AuthState {
@@ -33,10 +36,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   login: async (payload) => {
     try {
-      // const result = await accountService.login(payload)
+      const result = await accountService.login({
+        cpf: payload.cpf,
+        senha: payload.senha,
+      })
 
       set({
-        user: { name: 'Marina Silva', cpf: '203.200.102-21', roles: ['admin'] },
+        user: {
+          name: result.nome,
+          cpf: payload.cpf,
+          tipoFuncionarioId: result.tipoFuncionarioId,
+          matricula: result.matricula,
+          token: result.token
+        },
         isAuthenticated: true,
         isChecking: false,
       })
