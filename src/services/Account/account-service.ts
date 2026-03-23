@@ -29,7 +29,6 @@ export const accountService = {
             )
             return data
         } catch (error) {
-            console.log(error)
             throw error
         }
     },

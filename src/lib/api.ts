@@ -3,11 +3,23 @@ import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import type { ApiResponse } from '@/services/ApiResponse'
 
-const apiUrl = import.meta.env.VITE_API_URL
+let apiUrl = import.meta.env.VITE_API_URL
+
+// Em desenvolvimento, converte a URL absoluta em um caminho relativo
+// (ex: https://localhost:44327/api/v1 -> /api/v1)
+// Isso força a requisição a passar pelo proxy do Vite configurado no vite.config.ts,
+// que contorna o erro de CORS do navegador.
+if (import.meta.env.DEV) {
+    try {
+        const url = new URL(apiUrl)
+        apiUrl = url.pathname
+    } catch {
+        // Ignora caso a url já seja um caminho relativo
+    }
+}
 
 export const api = axios.create({
     baseURL: apiUrl,
-    withCredentials: true,
 })
 
 let isRefreshing = false
