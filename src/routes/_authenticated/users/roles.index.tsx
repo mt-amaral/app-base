@@ -1,23 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Users } from '@/features/users'
+import { Roles } from '@/features/users/roles'
 import { ForbiddenError } from '@/features/errors/forbidden'
 import { useAuthStore } from '@/stores/auth-store'
 
-export const Route = createFileRoute('/_authenticated/users/')({
+export const Route = createFileRoute('/_authenticated/users/roles/')({
   beforeLoad: async () => {
     await useAuthStore.getState().initAuth()
 
     const user = useAuthStore.getState().user
 
-    const hasPermission = user?.claims?.includes('users.view')
-    console.log('User claims:', user?.claims)
-    console.log(hasPermission)
+    const hasPermission = user?.claims?.includes('users.roles.view')
     if (!hasPermission) {
       throw new Error('FORBIDDEN')
     }
   },
 
-  component: Users,
+  component: Roles,
 
   errorComponent: ({ error }) => {
     if (error.message === 'FORBIDDEN') {

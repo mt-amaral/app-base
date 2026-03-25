@@ -1,8 +1,7 @@
 import { toast } from 'sonner'
 
 export function showSubmittedData(
-  data: unknown,
-  title: string = 'You submitted the following values:'
+  title: string = 'Alterações salvas com sucesso.'
 ) {
   toast.message(title, {
     description: (

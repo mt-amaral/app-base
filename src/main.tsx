@@ -2,90 +2,108 @@ import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { AxiosError } from 'axios'
 import {
+  MutationCache,
   QueryCache,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
+
 import { useAuthStore } from '@/stores/auth-store'
 import { handleServerError } from '@/lib/handle-server-error'
 import { ThemeProvider } from './context/theme-provider'
-
-// Generated Routes
 import { routeTree } from './routeTree.gen'
-// Styles
 import './styles/index.css'
+
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient: undefined as unknown as QueryClient,
+  },
+  defaultPreload: 'intent',
+  defaultPreloadStaleTime: 0,
+})
+
+function handleAuthError(error: unknown) {
+  if (!(error instanceof AxiosError)) return
+
+  const status = error.response?.status
+
+  if (status === 401) {
+    useAuthStore.getState().clearAuth()
+    const redirect = router.history.location.href
+    toast.error('Session expired!')
+    router.navigate({ to: '/signIn', search: { redirect } })
+    return
+  }
+
+  if (status === 403) {
+    router.navigate({ to: '/forbidden' as string, replace: true })
+    return
+  }
+
+  if (status === 500) {
+    toast.error('Internal Server Error!')
+    if (import.meta.env.PROD) {
+      router.navigate({ to: '/500' as string })
+    }
+  }
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: (failureCount, error) => {
-        if (import.meta.env.DEV) console.log({ failureCount, error })
-
-        if (failureCount >= 0 && import.meta.env.DEV) return false
-        if (failureCount > 3 && import.meta.env.PROD) return false
-
-        return !(
-          error instanceof AxiosError &&
-          [401, 403].includes(error.response?.status ?? 0)
-        )
-      },
-      refetchOnWindowFocus: import.meta.env.PROD,
-      staleTime: 10 * 1000, // 10s
-    },
-    mutations: {
-      onError: (error) => {
-        handleServerError(error)
+        if (import.meta.env.DEV) return false
 
         if (error instanceof AxiosError) {
-          if (error.response?.status === 304) {
-            toast.error('Content not modified!')
+          const status = error.response?.status
+          if (status && [400, 401, 403, 404].includes(status)) {
+            return false
           }
         }
+
+        return failureCount < 3
+      },
+      refetchOnWindowFocus: false,
+      staleTime: 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+    },
+    mutations: {
+      retry: false,
+      onError: (error) => {
+        handleServerError(error)
+        handleAuthError(error)
       },
     },
   },
   queryCache: new QueryCache({
     onError: (error) => {
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 401) {
-          useAuthStore.getState().clearAuth()
-          const redirect = `${router.history.location.href}`
-          toast.error('Session expired!')
-          router.navigate({ to: '/signIn', search: { redirect } })
-        }
-        if (error.response?.status === 500) {
-          toast.error('Internal Server Error!')
-          if (import.meta.env.PROD) {
-            router.navigate({ to: '/500' as string })
-          }
-        }
-        if (error.response?.status === 403) {
-          router.navigate({ to: '/forbidden' as string, replace: true })
-        }
-      }
+      handleAuthError(error)
+    },
+  }),
+  mutationCache: new MutationCache({
+    onError: (error) => {
+      handleAuthError(error)
     },
   }),
 })
 
-// Create a new router instance
-const router = createRouter({
-  routeTree,
-  context: { queryClient },
-  defaultPreload: 'intent',
-  defaultPreloadStaleTime: 0,
+router.update({
+  context: {
+    queryClient,
+  },
 })
 
-// Register the router instance for type safety
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router
   }
 }
 
-
 const rootElement = document.getElementById('root')!
+
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(

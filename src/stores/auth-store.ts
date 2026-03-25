@@ -2,9 +2,11 @@ import { create } from 'zustand'
 import { accountService } from '@/services/Account/account-service'
 
 interface AuthUser {
+  id: number
   name: string
   email: string
-  roles?: string[]
+  roleId: number
+  claims?: string[]
 }
 
 interface LoginPayload {

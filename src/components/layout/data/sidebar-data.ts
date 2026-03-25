@@ -2,21 +2,27 @@ import {
   LayoutDashboard,
   Settings,
   Users,
-  Command,
+  Crown
 } from 'lucide-react'
 import { type SidebarData } from '../types'
+import { useAuthStore } from '@/stores/auth-store'
+
+const user = useAuthStore.getState().user
+
+const canViewUsers = user?.claims?.includes('users.view')
+const canViewRoles = user?.claims?.includes('users.roles.view')
 
 export const sidebarData: Omit<SidebarData, 'user'> = {
   teams: [
     {
-      name: 'Shadcn Admin',
-      logo: Command,
-      plan: 'Vite + ShadcnUI',
+      name: 'App Base',
+      logo: Crown,
+      plan: 'Business description',
     }
   ],
   navGroups: [
     {
-      title: 'General',
+      title: 'Geral',
       items: [
         {
           title: 'Dashboard',
@@ -24,26 +30,35 @@ export const sidebarData: Omit<SidebarData, 'user'> = {
           icon: LayoutDashboard,
         },
         {
-          title: 'Users',
+          title: 'Usuários',
           icon: Users,
           items: [
-            {
-              title: 'User',
-              url: '/users',
-            },
-            {
-              title: 'Role',
-              url: '/users/roles',
-            }
-          ]
+            ...(canViewUsers
+              ? [
+                {
+                  title: 'Usuários',
+                  url: '/users',
+                },
+              ]
+              : []),
+
+            ...(canViewRoles
+              ? [
+                {
+                  title: 'Perfis',
+                  url: '/users/roles',
+                },
+              ]
+              : []),
+          ],
         },
       ],
     },
     {
-      title: 'Other',
+      title: 'Outros',
       items: [
         {
-          title: 'Settings',
+          title: 'Configurações',
           url: '/settings',
           icon: Settings,
         },

@@ -1,4 +1,5 @@
 import { ChevronRight } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 
 import { Header } from '@/components/layout/header'
 import { Search } from '@/components/search'
@@ -19,17 +20,21 @@ export function PageHeader({ fixed }: PageHeaderProps) {
                     {breadcrumb.map((item, index) => {
                         const isLast = index === breadcrumb.length - 1
 
+                        const className = isLast
+                            ? 'font-medium text-foreground'
+                            : 'text-muted-foreground hover:text-foreground transition-colors'
+
                         return (
                             <div key={`${item.label}-${index}`} className='flex items-center gap-2'>
-                                <span
-                                    className={
-                                        isLast
-                                            ? 'font-medium text-foreground'
-                                            : 'text-muted-foreground'
-                                    }
-                                >
-                                    {item.label}
-                                </span>
+                                {item.to && !isLast ? (
+                                    <Link to={item.to} className={className}>
+                                        {item.label}
+                                    </Link>
+                                ) : (
+                                    <span className={className}>
+                                        {item.label}
+                                    </span>
+                                )}
 
                                 {!isLast ? (
                                     <ChevronRight className='h-4 w-4 text-muted-foreground' />

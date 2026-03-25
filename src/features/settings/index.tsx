@@ -7,12 +7,12 @@ import { SidebarNav } from './components/sidebar-nav'
 
 const sidebarNavItems = [
   {
-    title: 'Account',
+    title: 'Conta',
     href: '/settings',
     icon: <Wrench size={18} />,
   },
   {
-    title: 'Appearance',
+    title: 'Tema',
     href: '/settings/appearance',
     icon: <Palette size={18} />,
   },
@@ -27,10 +27,10 @@ export function Settings() {
       <Main fixed>
         <div className='space-y-0.5'>
           <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
-            Settings
+            Configurações
           </h1>
           <p className='text-muted-foreground'>
-            Manage your account settings.
+            Gerencie as configurações da sua conta.
           </p>
         </div>
 

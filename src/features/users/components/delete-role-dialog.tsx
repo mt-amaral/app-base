@@ -13,86 +13,83 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import type { Role } from '@/services/Role/role-service'
 
-interface DeleteUserDialogProps {
+interface DeleteRoleDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
-    onConfirm: (userId: number) => Promise<void> | void
-    loading?: boolean
-    user: {
-        id: number
-        name: string
-        email: string
-        roleId: number
-        roleName: string
-    }
+    role: Role
+    onConfirm: (roleId: number) => Promise<void>
+    isSubmitting?: boolean
 }
 
-export function DeleteUserDialog({
+export function DeleteRoleDialog({
     open,
     onOpenChange,
+    role,
     onConfirm,
-    loading = false,
-    user,
-}: DeleteUserDialogProps) {
+    isSubmitting = false,
+}: DeleteRoleDialogProps) {
     const [value, setValue] = useState('')
 
-    const expectedValue = user.name
-    const isValid = value.trim() === expectedValue
+    const isValid = value.trim() === role.name
 
-    async function handleConfirm() {
-        if (!isValid || loading) return
+    const handleOpenChange = (nextOpen: boolean) => {
+        if (!nextOpen) {
+            setValue('')
+        }
 
-        await onConfirm(user.id)
+        onOpenChange(nextOpen)
+    }
+
+    const handleConfirm = async (
+        e: React.MouseEvent<HTMLButtonElement>
+    ) => {
+        e.preventDefault()
+
+        if (!isValid || isSubmitting) return
+
+        await onConfirm(role.id)
         setValue('')
     }
 
     return (
-        <AlertDialog
-            open={open}
-            onOpenChange={(nextOpen) => {
-                if (!nextOpen) {
-                    setValue('')
-                }
-                onOpenChange(nextOpen)
-            }}
-        >
+        <AlertDialog open={open} onOpenChange={handleOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle className='text-destructive'>
                         <span className='inline-flex items-center gap-2'>
                             <AlertTriangle className='h-5 w-5' />
-                            Excluir Usuário
+                            Excluir perfil
                         </span>
                     </AlertDialogTitle>
 
                     <AlertDialogDescription asChild>
                         <div className='space-y-4 text-sm'>
                             <p>
-                                Tem certeza de que deseja excluir o usuário{' '}
-                                <span className='font-bold'>{user.name}</span>?
+                                Tem certeza que deseja excluir o perfil{' '}
+                                <span className='font-bold'>{role.name}</span>?
                                 <br />
-                                Esta ação removerá definitivamente o usuário do sistema.
-                                Isso não pode ser desfeito.
+                                Esta ação removerá permanentemente este perfil do sistema.
+                                Isso não poderá ser desfeito.
                             </p>
 
                             <div className='space-y-2'>
-                                <Label htmlFor='confirm-user-delete'>
-                                    Digite o nome do usuário para confirmar
+                                <Label htmlFor='confirm-role-delete'>
+                                    Digite o nome do perfil para confirmar
                                 </Label>
                                 <Input
-                                    id='confirm-user-delete'
+                                    id='confirm-role-delete'
                                     value={value}
                                     onChange={(e) => setValue(e.target.value)}
-                                    placeholder='Digite o nome do usuário para confirmar a exclusão'
-                                    disabled={loading}
+                                    placeholder='Digite o nome do perfil para confirmar a exclusão'
                                 />
                             </div>
 
                             <Alert variant='destructive'>
                                 <AlertTitle>Atenção!</AlertTitle>
                                 <AlertDescription>
-                                    Tenha cuidado, esta operação não pode ser revertida.
+                                    Tenha cuidado, esta operação não poderá ser revertida.
                                 </AlertDescription>
                             </Alert>
                         </div>
@@ -100,12 +97,14 @@ export function DeleteUserDialog({
                 </AlertDialogHeader>
 
                 <AlertDialogFooter>
-                    <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
+                    <AlertDialogCancel disabled={isSubmitting}>
+                        Cancelar
+                    </AlertDialogCancel>
                     <AlertDialogAction
+                        disabled={!isValid || isSubmitting}
                         onClick={handleConfirm}
-                        disabled={!isValid || loading}
                     >
-                        {loading ? 'Excluindo...' : 'Excluir'}
+                        {isSubmitting ? 'Excluindo...' : 'Excluir'}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

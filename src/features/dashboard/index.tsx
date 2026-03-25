@@ -1,10 +1,8 @@
 import { PageHeader } from '@/components/layout/page-header'
 import { Main } from '@/components/layout/main'
 import { Separator } from '@/components/ui/separator'
-import { usePageBreadcrumb } from '@/hooks/use-page-breadcrumb'
 
 export function Dashboard() {
-  const breadcrumb = usePageBreadcrumb()
 
   return (
     <>

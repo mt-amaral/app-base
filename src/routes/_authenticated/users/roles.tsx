@@ -1,6 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { Roles } from '@/features/users/roles'
+import { Outlet, createFileRoute } from '@tanstack/react-router'
+
+function RolesLayout() {
+  return <Outlet />
+}
 
 export const Route = createFileRoute('/_authenticated/users/roles')({
-  component: Roles,
+  component: RolesLayout,
 })

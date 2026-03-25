@@ -17,6 +17,8 @@ import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedUsersRolesRouteImport } from './routes/_authenticated/users/roles'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
+import { Route as AuthenticatedUsersRolesIndexRouteImport } from './routes/_authenticated/users/roles.index'
+import { Route as AuthenticatedUsersRolesRoleIdEditRouteImport } from './routes/_authenticated/users/roles.$roleId.edit'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -60,23 +62,38 @@ const AuthenticatedSettingsAppearanceRoute =
     path: '/appearance',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedUsersRolesIndexRoute =
+  AuthenticatedUsersRolesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedUsersRolesRoute,
+  } as any)
+const AuthenticatedUsersRolesRoleIdEditRoute =
+  AuthenticatedUsersRolesRoleIdEditRouteImport.update({
+    id: '/$roleId/edit',
+    path: '/$roleId/edit',
+    getParentRoute: () => AuthenticatedUsersRolesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/signIn/': typeof SignInIndexRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/users/roles': typeof AuthenticatedUsersRolesRoute
+  '/users/roles': typeof AuthenticatedUsersRolesRouteWithChildren
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/users/roles/': typeof AuthenticatedUsersRolesIndexRoute
+  '/users/roles/$roleId/edit': typeof AuthenticatedUsersRolesRoleIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/signIn': typeof SignInIndexRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/users/roles': typeof AuthenticatedUsersRolesRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/users/roles': typeof AuthenticatedUsersRolesIndexRoute
+  '/users/roles/$roleId/edit': typeof AuthenticatedUsersRolesRoleIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -85,9 +102,11 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/signIn/': typeof SignInIndexRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/_authenticated/users/roles': typeof AuthenticatedUsersRolesRoute
+  '/_authenticated/users/roles': typeof AuthenticatedUsersRolesRouteWithChildren
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/users/roles/': typeof AuthenticatedUsersRolesIndexRoute
+  '/_authenticated/users/roles/$roleId/edit': typeof AuthenticatedUsersRolesRoleIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,14 +118,17 @@ export interface FileRouteTypes {
     | '/users/roles'
     | '/settings/'
     | '/users/'
+    | '/users/roles/'
+    | '/users/roles/$roleId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/signIn'
     | '/settings/appearance'
-    | '/users/roles'
     | '/settings'
     | '/users'
+    | '/users/roles'
+    | '/users/roles/$roleId/edit'
   id:
     | '__root__'
     | '/_authenticated'
@@ -117,6 +139,8 @@ export interface FileRouteTypes {
     | '/_authenticated/users/roles'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
+    | '/_authenticated/users/roles/'
+    | '/_authenticated/users/roles/$roleId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -182,6 +206,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/users/roles/': {
+      id: '/_authenticated/users/roles/'
+      path: '/'
+      fullPath: '/users/roles/'
+      preLoaderRoute: typeof AuthenticatedUsersRolesIndexRouteImport
+      parentRoute: typeof AuthenticatedUsersRolesRoute
+    }
+    '/_authenticated/users/roles/$roleId/edit': {
+      id: '/_authenticated/users/roles/$roleId/edit'
+      path: '/$roleId/edit'
+      fullPath: '/users/roles/$roleId/edit'
+      preLoaderRoute: typeof AuthenticatedUsersRolesRoleIdEditRouteImport
+      parentRoute: typeof AuthenticatedUsersRolesRoute
+    }
   }
 }
 
@@ -201,17 +239,34 @@ const AuthenticatedSettingsRouteRouteWithChildren =
     AuthenticatedSettingsRouteRouteChildren,
   )
 
+interface AuthenticatedUsersRolesRouteChildren {
+  AuthenticatedUsersRolesIndexRoute: typeof AuthenticatedUsersRolesIndexRoute
+  AuthenticatedUsersRolesRoleIdEditRoute: typeof AuthenticatedUsersRolesRoleIdEditRoute
+}
+
+const AuthenticatedUsersRolesRouteChildren: AuthenticatedUsersRolesRouteChildren =
+  {
+    AuthenticatedUsersRolesIndexRoute: AuthenticatedUsersRolesIndexRoute,
+    AuthenticatedUsersRolesRoleIdEditRoute:
+      AuthenticatedUsersRolesRoleIdEditRoute,
+  }
+
+const AuthenticatedUsersRolesRouteWithChildren =
+  AuthenticatedUsersRolesRoute._addFileChildren(
+    AuthenticatedUsersRolesRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedUsersRolesRoute: typeof AuthenticatedUsersRolesRoute
+  AuthenticatedUsersRolesRoute: typeof AuthenticatedUsersRolesRouteWithChildren
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedUsersRolesRoute: AuthenticatedUsersRolesRoute,
+  AuthenticatedUsersRolesRoute: AuthenticatedUsersRolesRouteWithChildren,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }
 

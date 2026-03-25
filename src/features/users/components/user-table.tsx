@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import {
   Table,
   TableBody,
@@ -13,10 +14,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, ChevronLeft, ChevronRight } from 'lucide-react'
-import { EditUserForm } from './edit-user-form'
+import {
+  MoreHorizontal,
+  ChevronLeft,
+  ChevronRight,
+  Pencil,
+  Trash2,
+} from 'lucide-react'
 import { DeleteUserDialog } from './delete-user-dialog'
 
 export interface UserTableItem {
@@ -34,29 +39,35 @@ export interface RoleOption {
 
 interface UserTableProps {
   users: UserTableItem[]
-  roles: RoleOption[]
   currentPage: number
   totalPages: number
   totalCount: number
   onPageChange: (page: number) => void
+  onEdit: (user: UserTableItem) => void
+  onDelete: (userId: number) => Promise<void> | void
+  isDeletingUser?: boolean
+  canEditUser: boolean | undefined
+  canDeleteUser: boolean | undefined
+  canViewClaims: boolean | undefined
 }
 
 export function UserTable({
   users,
-  roles,
   currentPage,
   totalPages,
   totalCount,
   onPageChange,
+  onEdit,
+  onDelete,
+  isDeletingUser = false,
+  canEditUser,
+  canDeleteUser,
+  canViewClaims,
+
 }: UserTableProps) {
   const [selectedUser, setSelectedUser] = useState<UserTableItem | null>(null)
-  const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-
-  const handleEdit = (user: UserTableItem) => {
-    setSelectedUser(user)
-    setIsEditOpen(true)
-  }
+  const canShowActions = Boolean(canEditUser || canDeleteUser)
 
   const handleDelete = (user: UserTableItem) => {
     setSelectedUser(user)
@@ -70,11 +81,10 @@ export function UserTable({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead className='w-[60px] text-right'>Ações</TableHead>
+                <TableHead className='w-[220px]'>Nome</TableHead>
+                <TableHead className='w-[320px]'>Email</TableHead>
+                <TableHead className='w-[180px]'>Perfil</TableHead>
+                <TableHead className='w-[60px] text-center'></TableHead>
               </TableRow>
             </TableHeader>
 
@@ -82,34 +92,65 @@ export function UserTable({
               {users.length > 0 ? (
                 users.map((user) => (
                   <TableRow key={user.id}>
-                    <TableCell>{user.id}</TableCell>
                     <TableCell>{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.roleName}</TableCell>
-                    <TableCell className='text-right'>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant='ghost' size='icon'>
-                            <MoreHorizontal className='h-4 w-4' />
-                          </Button>
-                        </DropdownMenuTrigger>
+                    <TableCell>
+                      {canViewClaims ? (<Link
+                        to='/users/roles/$roleId/edit'
+                        params={{ roleId: String(user.roleId) }}
+                        className='text-primary hover:underline'
+                      >
+                        {user.roleName}
+                      </Link>
+                      ) : (
+                        user.roleName
+                      )}
+                    </TableCell>
 
-                        <DropdownMenuContent align='end'>
-                          <DropdownMenuItem onClick={() => handleEdit(user)}>
-                            Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleDelete(user)}>
-                            Deletar
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                    <TableCell className='text-center'>
+                      {canShowActions && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant='ghost'
+                              size='icon'
+                              className='h-8 w-8 text-muted-foreground'
+                            >
+                              <MoreHorizontal className='h-4 w-4' />
+                            </Button>
+                          </DropdownMenuTrigger>
+
+                          <DropdownMenuContent align='end' className='w-40 p-1'>
+                            {canEditUser && (
+                              <DropdownMenuItem
+                                onClick={() => onEdit(user)}
+                                className='flex items-center justify-between rounded-md px-3 py-2'
+                              >
+                                <span>Editar</span>
+                                <Pencil className='h-4 w-4 text-muted-foreground' />
+                              </DropdownMenuItem>
+                            )}
+
+
+                            {canDeleteUser && (
+                              <DropdownMenuItem
+                                onClick={() => handleDelete(user)}
+                                className='flex items-center justify-between rounded-md px-3 py-2 text-red-600 focus:text-red-600'
+                              >
+                                <span>Deletar</span>
+                                <Trash2 className='h-4 w-4' />
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className='text-center'>
-                    No users found.
+                  <TableCell colSpan={4} className='text-center'>
+                    Nenhum usuário encontrado.
                   </TableCell>
                 </TableRow>
               )}
@@ -146,17 +187,20 @@ export function UserTable({
         </div>
       </div>
 
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className='sm:max-w-lg'>
-          {selectedUser && <EditUserForm user={selectedUser} roles={roles} />}
-        </DialogContent>
-      </Dialog>
-
       {selectedUser && (
         <DeleteUserDialog
           open={isDeleteOpen}
-          onOpenChange={setIsDeleteOpen}
+          onOpenChange={(open) => {
+            setIsDeleteOpen(open)
+            if (!open) setSelectedUser(null)
+          }}
           user={selectedUser}
+          onConfirm={async (userId) => {
+            await onDelete(userId)
+            setIsDeleteOpen(false)
+            setSelectedUser(null)
+          }}
+          loading={isDeletingUser}
         />
       )}
     </>

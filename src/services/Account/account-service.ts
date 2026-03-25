@@ -10,9 +10,11 @@ interface LoginPayload {
 
 
 interface MeResponse {
+    id: number
     name: string
     email: string
-    roles?: string[]
+    roleId: number
+    claims?: string[]
 }
 
 export const accountService = {

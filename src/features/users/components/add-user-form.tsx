@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -21,26 +21,20 @@ import {
     SelectValue,
 } from '@/components/ui/select'
 
-import type { UpdateUserByIdPayload } from '@/services/User/user-service'
+import type { CreateUserPayload } from '@/services/User/user-service'
 
 interface RoleOption {
     id: number
     name: string
 }
 
-interface EditUserFormProps {
-    user: {
-        id: number
-        name: string
-        email: string
-        roleId: number
-    }
+interface AddUserFormProps {
     roles?: RoleOption[]
-    onSubmit: (payload: UpdateUserByIdPayload) => Promise<void> | void
+    onSubmit: (payload: CreateUserPayload) => Promise<void>
     loading?: boolean
 }
 
-const editUserFormSchema = z
+const addUserFormSchema = z
     .object({
         userName: z
             .string()
@@ -61,40 +55,26 @@ const editUserFormSchema = z
 
         newPassword: z
             .string()
-            .max(100, 'Senha deve ter no máximo 100 caracteres.')
-            .or(z.literal('')),
+            .min(1, 'Senha é obrigatória.')
+            .min(6, 'Senha deve ter no mínimo 6 caracteres.')
+            .max(100, 'Senha deve ter no máximo 100 caracteres.'),
 
         confirmPassword: z
             .string()
-            .max(100, 'Confirmação de senha deve ter no máximo 100 caracteres.')
-            .or(z.literal('')),
+            .min(1, 'Confirmação de senha é obrigatória.'),
     })
-    .refine(
-        (data) =>
-            !data.newPassword || data.newPassword.length >= 6,
-        {
-            message: 'Senha deve ter no mínimo 6 caracteres.',
-            path: ['newPassword'],
-        }
-    )
-    .refine(
-        (data) =>
-            (!data.newPassword && !data.confirmPassword) ||
-            data.newPassword === data.confirmPassword,
-        {
-            message: 'As senhas precisam ser iguais.',
-            path: ['confirmPassword'],
-        }
-    )
+    .refine((data) => data.newPassword === data.confirmPassword, {
+        message: 'As senhas precisam ser iguais.',
+        path: ['confirmPassword'],
+    })
 
-type EditUserFormData = z.infer<typeof editUserFormSchema>
+type AddUserFormData = z.infer<typeof addUserFormSchema>
 
-export function EditUserForm({
-    user,
+export function AddUserForm({
     roles = [],
     onSubmit,
     loading = false,
-}: EditUserFormProps) {
+}: AddUserFormProps) {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -103,38 +83,26 @@ export function EditUserForm({
         handleSubmit,
         setValue,
         watch,
-        reset,
         formState: { errors },
-    } = useForm<EditUserFormData>({
-        resolver: zodResolver(editUserFormSchema),
+    } = useForm<AddUserFormData>({
+        resolver: zodResolver(addUserFormSchema),
         defaultValues: {
-            userName: user.name,
-            email: user.email,
-            roleId: String(user.roleId),
+            userName: '',
+            email: '',
+            roleId: '',
             newPassword: '',
             confirmPassword: '',
         },
     })
 
-    useEffect(() => {
-        reset({
-            userName: user.name,
-            email: user.email,
-            roleId: String(user.roleId),
-            newPassword: '',
-            confirmPassword: '',
-        })
-    }, [user, reset])
-
     const selectedRoleId = watch('roleId')
 
-    async function handleFormSubmit(data: EditUserFormData) {
+    async function handleFormSubmit(data: AddUserFormData) {
         await onSubmit({
-            id: user.id,
             userName: data.userName.trim(),
             email: data.email.trim(),
-            newPassword: data.newPassword || undefined,
-            confirmPassword: data.confirmPassword || undefined,
+            newPassword: data.newPassword,
+            confirmPassword: data.confirmPassword,
             roleId: Number(data.roleId),
         })
     }
@@ -142,9 +110,9 @@ export function EditUserForm({
     return (
         <>
             <DialogHeader className='text-start'>
-                <DialogTitle>Editar Usuário</DialogTitle>
+                <DialogTitle>Criar Novo Usuário</DialogTitle>
                 <DialogDescription>
-                    Atualize o usuário aqui. Clique em salvar quando terminar.
+                    Crie um novo usuário aqui. Clique em salvar quando terminar.
                 </DialogDescription>
             </DialogHeader>
 
@@ -158,6 +126,7 @@ export function EditUserForm({
                             <div className='col-span-4'>
                                 <Input
                                     id='userName'
+                                    placeholder='john.doe'
                                     autoComplete='off'
                                     {...register('userName')}
                                 />
@@ -177,6 +146,7 @@ export function EditUserForm({
                                 <Input
                                     id='email'
                                     type='email'
+                                    placeholder='john.doe@email.com'
                                     autoComplete='off'
                                     {...register('email')}
                                 />
@@ -230,7 +200,7 @@ export function EditUserForm({
                                 <Input
                                     id='newPassword'
                                     type={showPassword ? 'text' : 'password'}
-                                    placeholder='Deixe em branco para não alterar'
+                                    placeholder='e.g. S3cur3P@ssw0rd'
                                     className='pr-10'
                                     autoComplete='new-password'
                                     {...register('newPassword')}
@@ -262,7 +232,7 @@ export function EditUserForm({
                                 <Input
                                     id='confirmPassword'
                                     type={showConfirmPassword ? 'text' : 'password'}
-                                    placeholder='Confirme a nova senha'
+                                    placeholder='e.g. S3cur3P@ssw0rd'
                                     className='pr-10'
                                     autoComplete='new-password'
                                     {...register('confirmPassword')}
@@ -290,7 +260,7 @@ export function EditUserForm({
 
                 <DialogFooter className='mt-4'>
                     <Button type='submit' disabled={loading}>
-                        {loading ? 'Salvando...' : 'Salvar Alterações'}
+                        {loading ? 'Salvando...' : 'Salvar Usuário'}
                     </Button>
                 </DialogFooter>
             </form>
