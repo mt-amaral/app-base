@@ -2,6 +2,11 @@
 
 Projeto simples de autenticação, navegação, listagens e telas administrativas. A base está montada em **React + Vite + TypeScript**, usando **TanStack Router**, **TanStack Query**, **shadcn/ui**, **Radix UI** e **Tailwind CSS v4**.Com suporte para build de produção com **Nginx** e para SPA no Netlify.
 
+<img width="1176" height="702" alt="image" src="https://github.com/user-attachments/assets/2961545c-6129-480e-ac95-6f2c9ce7d523" />
+<img width="1487" height="784" alt="image" src="https://github.com/user-attachments/assets/c8d8d07c-29ee-40e0-a91b-ca6471b28c8c" />
+
+
+
 ### Backend
 
 - Backend usado: https://github.com/mt-amaral/api-base
