@@ -22,16 +22,17 @@ export interface UpdateRoleClaimPayload {
 export const roleClaimService = {
     async getByRoleId(roleId: number) {
         const { data } = await api.get<ApiResponse<RoleClaimResponse>>(
-            `/RoleClaim/${roleId}`,
+            `/roles/${roleId}/claims`,
             {withCredentials: true,}
         )
         return data
     },
 
     async update(payload: UpdateRoleClaimPayload) {
-        const { data } = await api.post<ApiResponse<boolean>>(
-            '/RoleClaim/update',
-            payload, {withCredentials: true,}
+        const { roleId, claims } = payload
+        const { data } = await api.put<ApiResponse<boolean>>(
+            `/roles/${roleId}/claims`,
+            { claims }, {withCredentials: true,}
         )
 
         return data

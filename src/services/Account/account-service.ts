@@ -20,24 +20,24 @@ interface MeResponse {
 export const accountService = {
     async login(payload: LoginPayload) {
         const { data } = await api.post<ApiResponse<MeResponse>>(
-            '/Account/Login',
+            '/sessions',
             payload
         )
         return data
     },
 
     async checkMe() {
-        const { data } = await api.get<ApiResponse<MeResponse>>('/Account/CheckMe', { withCredentials: true })
+        const { data } = await api.get<ApiResponse<MeResponse>>('/sessions/current', { withCredentials: true })
         return data
     },
 
     async refresh() {
-        const { data } = await api.post<ApiResponse<string>>('/Account/Refresh', { withCredentials: true })
+        const { data } = await api.post<ApiResponse<string>>('/refresh-tokens', {}, { withCredentials: true })
         return data
     },
 
     async logout() {
-        const { data } = await api.post('/Account/Logout', { withCredentials: true })
+        const { data } = await api.delete('/sessions/current', { withCredentials: true })
         return data
     },
 }

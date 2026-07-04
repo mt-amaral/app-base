@@ -34,7 +34,7 @@ export interface ListRolesParams extends PaginationRequest {
 export const roleService = {
     async listRoles(params?: ListRolesParams) {
         const { data } = await api.get<PagedResponse<RoleList[]>>(
-            '/Role/list-roles',
+            '/roles',
             {
                 params: {
                     SearchString: params?.searchString ?? '',
@@ -50,7 +50,7 @@ export const roleService = {
 
     async listAllRoles() {
         const { data } = await api.get<ApiResponse<RoleList[]>>(
-            '/Role/list-all-roles',
+            '/roles/summaries',
             {
                 withCredentials: true,
             }
@@ -60,7 +60,7 @@ export const roleService = {
 
     async create(payload: CreateRolePayload) {
         const { data } = await api.post<ApiResponse<Role>>(
-            '/Role/create',
+            '/roles',
             payload,
             {
                 withCredentials: true,
@@ -71,9 +71,10 @@ export const roleService = {
     },
 
     async update(payload: UpdateRolePayload) {
-        const { data } = await api.post<ApiResponse<Role>>(
-            '/Role/update',
-            payload,
+        const { id, ...body } = payload
+        const { data } = await api.put<ApiResponse<Role>>(
+            `/roles/${id}`,
+            body,
             {
                 withCredentials: true,
             }
@@ -84,7 +85,7 @@ export const roleService = {
 
     async delete(id: number) {
         const { data } = await api.delete<ApiResponse<boolean>>(
-            `/Role/delete/${id}`,
+            `/roles/${id}`,
             {
                 withCredentials: true,
             }

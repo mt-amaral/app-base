@@ -38,7 +38,7 @@ export interface ListUsersParams extends PaginationRequest {
 export const userService = {
     async listUsers(params?: ListUsersParams) {
         const { data } = await api.get<PagedResponse<User[]>>(
-            '/User/list-users',
+            '/users',
             {
                 params: {
                     PageNumber: params?.currentPage,
@@ -55,7 +55,7 @@ export const userService = {
 
     async create(payload: CreateUserPayload) {
         const { data } = await api.post<ApiResponse<User>>(
-            '/User/create',
+            '/users',
             payload,
             {
                 withCredentials: true,
@@ -68,13 +68,10 @@ export const userService = {
     async update(payload: UpdateUserByIdPayload) {
         const { id, ...body } = payload
 
-        const { data } = await api.post<ApiResponse<User>>(
-            '/User/update',
+        const { data } = await api.put<ApiResponse<User>>(
+            `/users/${id}`,
             body,
             {
-                params: {
-                    UserId: id,
-                },
                 withCredentials: true,
             }
         )
@@ -83,8 +80,8 @@ export const userService = {
     },
 
     async updateLogged(payload: UpdateUserPayload) {
-        const { data } = await api.post<ApiResponse<User>>(
-            '/User/update-logged',
+        const { data } = await api.put<ApiResponse<User>>(
+            '/users/me',
             payload,
             {
                 withCredentials: true,
@@ -95,8 +92,8 @@ export const userService = {
     },
 
     async delete(id: number) {
-        const { data } = await api.delete<ApiResponse<null>>(
-            `/User/delete/${id}`,
+        const { data } = await api.delete<ApiResponse<boolean>>(
+            `/users/${id}`,
             {
                 withCredentials: true,
             }

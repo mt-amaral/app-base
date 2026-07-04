@@ -1,4 +1,4 @@
-import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import type { ApiResponse } from '@/services/ApiResponse'
@@ -43,8 +43,9 @@ api.interceptors.response.use(
 
         const status = error.response?.status
 
-        const isRefreshRequest = originalRequest?.url?.includes('/Account/Refresh')
-        const isLoginRequest = originalRequest?.url?.includes('/Account/Login')
+        const requestMethod = originalRequest?.method?.toUpperCase()
+        const isRefreshRequest = originalRequest?.url?.includes('/refresh-tokens')
+        const isLoginRequest = originalRequest?.url?.includes('/sessions') && requestMethod === 'POST'
 
         if (status === 401 && !isRefreshRequest && !isLoginRequest) {
             if (originalRequest._retry) {
@@ -64,7 +65,7 @@ api.interceptors.response.use(
 
             try {
                 await axios.post(
-                    `${apiUrl}/Account/Refresh`,
+                    `${apiUrl}/refresh-tokens`,
                     {},
                     { withCredentials: true }
                 )
